@@ -7,7 +7,9 @@ import { Users } from "./components/Users";
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [invites, setInvites] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     fetch("https://reqres.in/api/users")
@@ -22,9 +24,28 @@ function App() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const onChangeSearchValue = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const onClickInvite = (id) => {
+    if (invites.includes(id)) {
+      setInvites((prew) => prew.filter((_id) => _id !== id));
+    } else {
+      setInvites((prew) => [...prew, id]);
+    }
+  };
+
   return (
     <div className="App">
-      <Users items={users} isLoading={isLoading} />
+      <Users
+        onChangeSearchValue={onChangeSearchValue}
+        searchValue={searchValue}
+        items={users}
+        isLoading={isLoading}
+        invites={invites}
+        onClickInvite={onClickInvite}
+      />
       {/* <Success /> */}
     </div>
   );
